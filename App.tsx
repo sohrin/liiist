@@ -1,21 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { Platform, StyleSheet, Text, View, FlatList, Button, TextInput, Alert } from 'react-native';
+import { Platform, StyleSheet, Text, View, FlatList, TouchableOpacity, Button, TextInput, Alert } from 'react-native';
 import 'react-native-gesture-handler';
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Screen, screensEnabled } from 'react-native-screens';
 
+type MusicData = {
+  key: string,  // title + difficultType
+  title: string,
+  difficultType: string,
+  difficulity: number,
+};
+
 type RootStackParamList = {
   Home: {
     post: string
-  };
+  },
   Details: {
     itemId: number,
     msg: string | null,
-  };
+  },
   CreatePost: undefined
+  MusicList: {
+    musicDataList: MusicData[]
+  },
+  ImportCsv: undefined,
 };
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -67,30 +78,38 @@ function HomeScreen({route, navigation}: HomeProps) {
   return (
     <View style={styles.container}>
     <Text>Open up App.tsx to start working on your app! {label}</Text>
-    <View style={styles.buttonContainer}>
-      <Button
+    <View>
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => setLabel(label + "文字追加！")}
-        title="ボタン！"
         accessibilityLabel="Learn more about this purple button"
-      />
-      <Button
+      >
+        <Text>ボタン！</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => setLabel("")}
-        title="初期化！"
         accessibilityLabel="Learn more about this purple button"
-      />
-      <Button
-        title="Create post"
+      >
+        <Text>初期化！</Text>
+        </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => confirmNavigateCreatePost()}
-      />
-      <Button
-        title="Go to Details"
+      >
+        <Text>Create post</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => {
           navigation.navigate('Details', {
             itemId: 86,
             msg: "anything you want here"
           })
         }}
-      />
+      >
+        <Text>Go to Details</Text>
+      </TouchableOpacity>
 
       <Text style={{ margin: 10 }}>Post: {route.params?.post}</Text>
     </View>
@@ -196,10 +215,93 @@ function SettingsScreen() {
   );
 }
 
-function SampleScreen() {
+type ImportCsvScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ImportCsv'
+>;
+type ImportCsvProps = {
+  navigation: ImportCsvScreenNavigationProp
+};
+function ImportCsvScreen({navigation}: ImportCsvProps) {
+  const [csv, setCsv] = React.useState("");
+
+  const parseCsvToMusicData = () => {
+    let parsedMusicDataList: MusicData[] = [];
+    let csvRecordStrArr: string[] = csv.split("\n");
+    for (let csvRecordStr of csvRecordStrArr) {
+      // 最終行は空文字になるので処理しない
+      if (csvRecordStr !== "" && !csvRecordStr.startsWith("バージョン")) {
+        let csvArr: string[] = csvRecordStr.split(",");
+        // TODO: 正式実装
+        parsedMusicDataList.push({
+          key: csvArr[1] + "ANOTHER",
+          title: csvArr[1],
+          difficultType: "ANOTHER",
+          difficulity: 12,
+        });
+      }
+    }
+    navigation.navigate('MusicList', { musicDataList: parsedMusicDataList });
+  };
+
+  return (
+    <>
+      <TextInput
+        multiline
+        placeholder="input DP csv"
+        style={{ height: 200, padding: 10, backgroundColor: 'white' }}
+        onChangeText={setCsv}
+      />
+      <Button
+        title="Done"
+        onPress={() => parseCsvToMusicData()}
+      />
+    </>
+  );
+}
+
+type MusicListScreenRouteProp = RouteProp<
+  RootStackParamList,
+  'MusicList'
+>;
+type MusicListScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'MusicList'
+>;
+type MusicListProps = {
+  route: MusicListScreenRouteProp,
+  navigation: MusicListScreenNavigationProp
+};
+function MusicListScreen({route, navigation}: MusicListProps) {
+  const param = route.params;
+
+  // TODO: anyをなくす。
+  const renderItem = ({item}: any) => (
+    <View style={styles.item}>
+      <Text style={styles.title}>{item.title}</Text>
+    </View>
+  );
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Sample!</Text>
+      <Text>MusicList!</Text>
+      <FlatList
+        data={param.musicDataList}
+        renderItem={renderItem}
+        keyExtractor={item => item.key}
+        // ListHeaderComponent={() => this._renderHeader.call(this)}
+        // ListFooterComponent={() => this._renderFooter.call(this)}
+        // onEndReachedThreshold={100}
+        // onEndReached={this._onEndReached.bind(this)}
+        // onViewableItemsChanged={this._onViewableItemsChanged.bind(this)}
+        // refreshing={this.state.refreshing}
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={this.state.refreshing}
+        //     onRefresh={this._reload.bind(this)}
+        //   />
+        // }
+    />
     </View>
   );
 }
@@ -212,8 +314,9 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Main" component={MainScreen} />
+        <Tab.Screen name="MusicList" component={MusicListScreen} initialParams={{musicDataList: []}} />
+        <Tab.Screen name="ImportCsv" component={ImportCsvScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
-        <Tab.Screen name="Sample" component={SampleScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
@@ -226,11 +329,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonContainer: {
-    height: 100,
-    width: 200,
-    padding: 10,
-    backgroundColor: '#FFFFFF',
-    margin: 3
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10
+  },
+  // buttonContainer: {
+  //   height: 100,
+  //   width: 200,
+  //   padding: 10,
+  //   backgroundColor: '#FFFFFF',
+  //   margin: 3
+  // },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
   },
 });

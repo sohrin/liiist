@@ -25,6 +25,9 @@ list knowledge management system(React Native, TypeScript)
 
 ## build
 
+## caution
+* React Natigationはv5から記法がガラッと変わっているので調査時に注意が必要。
+* ButtonはTabナビゲーションとStackナビゲーションをネストしたときにAndroidで動作しなくなったのでTouchableOpacityで代用下した。
 
 ## ref(finished)
 <dl>
