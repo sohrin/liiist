@@ -274,6 +274,20 @@ type MusicListProps = {
 };
 function MusicListScreen({route, navigation}: MusicListProps) {
   const param = route.params;
+  const [refreshFlatList, setRefreshFlatList] = React.useState(true);
+
+  useEffect(() => {
+    let firstMusicDataList: MusicData[] = [];
+    firstMusicDataList.push({
+      key: "testMusicTitle" + "ANOTHER",
+      title: "testMusicTitle",
+      difficultType: "ANOTHER",
+      difficulity: 12,
+    });
+    param.musicDataList.splice(0);
+    param.musicDataList.splice(param.musicDataList.length,　0,　...firstMusicDataList);
+    setRefreshFlatList(!refreshFlatList);
+  }, []); // MEMO: 第2引数に
 
   // TODO: anyをなくす。
   const renderItem = ({item}: any) => (
@@ -287,8 +301,10 @@ function MusicListScreen({route, navigation}: MusicListProps) {
       <Text>MusicList!</Text>
       <FlatList
         data={param.musicDataList}
+        extraData={refreshFlatList}
         renderItem={renderItem}
         keyExtractor={item => item.key}
+        style={{ flex: 1　}}
         // ListHeaderComponent={() => this._renderHeader.call(this)}
         // ListFooterComponent={() => this._renderFooter.call(this)}
         // onEndReachedThreshold={100}

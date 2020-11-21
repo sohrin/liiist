@@ -1,5 +1,5 @@
-# liiist
-list knowledge management system(React Native, TypeScript)
+cd /Users/str2653z/Documents/_dev/react/liiist
+
 # liiist
 list knowledge management system(React Native, TypeScript)
 
@@ -22,6 +22,13 @@ list knowledge management system(React Native, TypeScript)
 * yarn add @react-navigation/stack
 * yarn add @react-navigation/bottom-tabs
 * yarn add react-native-simple-dialogs
+* yarn add realm
+
+## setup Firebase
+プロジェクト名：kaiiiden
+Googleアナリティクスのアカウント名：kaiiiden
+https://firebase.google.com/docs/firestore/quickstart?authuser=0
+
 
 ## build
 
@@ -53,10 +60,10 @@ list knowledge management system(React Native, TypeScript)
 <dd>https://github.com/react-navigation/react-navigation/issues/8993</dd>
 <dt>Platform Specific Code</dt>
 <dd>https://reactnative.dev/docs/platform-specific-code</dd>
-<dt></dt>
-<dd></dd>
-<dt></dt>
-<dd></dd>
+<dt>[React Native]FlatListを更新する方法</dt>
+<dd>https://qiita.com/b_a_a_d_o/items/59b0cda06e869f7ddcdf</dd>
+<dt>[React] useEffectで無限ループしてしまう</dt>
+<dd>https://qiita.com/QiitaD/items/d3e1e29dbcb4ee1ba6a8</dd>
 <dt></dt>
 <dd></dd>
 <dt></dt>
