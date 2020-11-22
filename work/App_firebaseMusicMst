@@ -1,19 +1,38 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { Platform, StyleSheet, Text, View, FlatList, TouchableOpacity, Button, TextInput, Alert, Clipboard } from 'react-native';
+import {
+  Platform, 
+  StyleSheet, 
+  Text, 
+  View, 
+  FlatList, 
+  TouchableOpacity, 
+  Button, 
+  TextInput, 
+  Alert
+} from 'react-native';
 import 'react-native-gesture-handler';
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Screen, screensEnabled } from 'react-native-screens';
-import Storage from 'react-native-storage';
-import AsyncStorage from '@react-native-community/async-storage';
-// TODO: react-nativeでないと動かなかった
-//import Clipboard from '@react-native-community/clipboard';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 
-const storage = new Storage({
-  storageBackend: AsyncStorage
-})
+// Optionally import the services that you want to use
+//import "firebase/auth";
+//import "firebase/database";
+//import "firebase/firestore";
+//import "firebase/functions";
+//import "firebase/storage";
+
+// Initialize Firebase
+const firebaseConfig = {
+//
+};
+firebase.initializeApp(firebaseConfig);
+const firestore = firebase.firestore();
+const musicMstCollection = firestore.collection("musicMst");
 
 type MusicData = {
   key: string,  // title + difficultType
@@ -233,36 +252,59 @@ type ImportCsvProps = {
 function ImportCsvScreen({navigation}: ImportCsvProps) {
   const [csv, setCsv] = React.useState("");
 
-  // Androidのコピペ動作不良対応
-  const pasteAndParseCsvToMusicData = async() => {
-    const text = await Clipboard.getString();
-    setCsv(text);
-    parseCsvToMusicData();
-  }
-
   const parseCsvToMusicData = () => {
     let parsedMusicDataList: MusicData[] = [];
     let csvRecordStrArr: string[] = csv.split("\n");
+
+    let keycount = 0;
     for (let csvRecordStr of csvRecordStrArr) {
+
+
+      // TODO: デバッグソース
+      if (keycount === 5) {
+        break;
+      }
+
+
       // 最終行は空文字になるので処理しない
       if (csvRecordStr !== "" && !csvRecordStr.startsWith("バージョン")) {
         let csvArr: string[] = csvRecordStr.split(",");
         // TODO: 正式実装
         parsedMusicDataList.push({
-          key: csvArr[1] + "ANOTHER",
+          key: csvArr[1] + keycount,
           title: csvArr[1],
           difficultType: "ANOTHER",
           difficulity: 12,
         });
+
+
+        // TODO: これはテスト用
+        keycount++;
       }
     }
 
-    storage.save({
-      key: 'musicDataList',
-      data: parsedMusicDataList
-    })
+    // TODO: alert後で消す
+    alert("A");
 
-    navigation.navigate('MusicList', { musicDataList: parsedMusicDataList });
+    // 全件削除
+    deleteCollection(firestore, "musicMst", 500);
+
+        // TODO: alert後で消す
+        alert("B");
+
+    // // 全件登録
+    // for (let parsedMusicData of parsedMusicDataList) {
+    //   firestore.collection("musicMst").add(parsedMusicData);
+    // }
+
+        // TODO: alert後で消す
+        alert("C");
+
+    // TODO: 後で消す
+    alert("add mst finish!");
+
+//    navigation.navigate('MusicList', { musicDataList: parsedMusicDataList });
+    navigation.navigate('MusicList', { musicDataList: [] });
   };
 
   return (
@@ -274,11 +316,7 @@ function ImportCsvScreen({navigation}: ImportCsvProps) {
         onChangeText={setCsv}
       />
       <Button
-        title="Paste And Import CSV (for Android)"
-        onPress={() => pasteAndParseCsvToMusicData()}
-      />
-      <Button
-        title="Import CSV"
+        title="Done"
         onPress={() => parseCsvToMusicData()}
       />
     </>
@@ -302,15 +340,19 @@ function MusicListScreen({route, navigation}: MusicListProps) {
   const [refreshFlatList, setRefreshFlatList] = React.useState(true);
 
   useEffect(() => {
-    storage.load({key: 'musicDataList'})
-      .then(storageMusicDataList => {
-        param.musicDataList.splice(0);
-        param.musicDataList.splice(param.musicDataList.length,　0,　...storageMusicDataList);
-        setRefreshFlatList(!refreshFlatList);
-      })
-      .catch(err => {
-        // TODO: 例外処理
+    // alert後で消すこと
+    alert("useEffect BEGIN.");
+    param.musicDataList.splice(0);
+    const query = musicMstCollection.get().then((snapshot) => {
+      let selectedMusicDataList: MusicData[] = [];
+      snapshot.docs.forEach(doc => {
+        selectedMusicDataList.push(doc.data() as MusicData);
       });
+      // TODO: alert後で消す
+      alert(selectedMusicDataList.length);
+      param.musicDataList.splice(param.musicDataList.length,　0,　...selectedMusicDataList);
+      setRefreshFlatList(!refreshFlatList);
+    });
   }, []); // MEMO: 第2引数に
 
   // TODO: anyをなくす。
@@ -391,3 +433,51 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
 });
+
+
+
+
+
+
+
+
+function deleteCollection(db: any, collectionPath: any, batchSize: any) {
+  let collectionRef = db.collection(collectionPath);
+  let query = collectionRef.limit(batchSize);
+
+  return new Promise((resolve, reject) => {
+    deleteQueryBatch(db, query, batchSize, resolve, reject);
+  });
+}
+
+function deleteQueryBatch(db: any, query: any, batchSize: any, resolve: any, reject: any) {
+  query.get()
+    .then((snapshot: any) => {
+      // When there are no documents left, we are done
+      if (snapshot.size == 0) {
+        return 0;
+      }
+
+      // Delete documents in a batch
+      let batch = db.batch();
+      snapshot.docs.forEach((doc: any) => {
+        batch.delete(doc.ref);
+      });
+
+      return batch.commit().then(() => {
+        return snapshot.size;
+      });
+    }).then((numDeleted: any) => {
+      if (numDeleted === 0) {
+        resolve();
+        return;
+      }
+
+      // Recurse on the next process tick, to avoid
+      // exploding the stack.
+      process.nextTick(() => {
+        deleteQueryBatch(db, query, batchSize, resolve, reject);
+      });
+    })
+    .catch(reject);
+}

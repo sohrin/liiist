@@ -22,12 +22,32 @@ list knowledge management system(React Native, TypeScript)
 * yarn add @react-navigation/stack
 * yarn add @react-navigation/bottom-tabs
 * yarn add react-native-simple-dialogs
-* yarn add realm
+* yarn add react-native-storage
+* yarn add @react-native-community/async-storage
+* expo install @react-native-community/async-storage
+* expo install firebase
+
+
 
 ## setup Firebase
 プロジェクト名：kaiiiden
 Googleアナリティクスのアカウント名：kaiiiden
 https://firebase.google.com/docs/firestore/quickstart?authuser=0
+firestoreのデータベース作成（本番モード、asia-northeast1（東京））
+Webアプリにfirebaseを追加（Firebase Hostingは後）※firebaseConfigを控える
+https://reffect.co.jp/html/firebase-cloud-firestore
+以下を参考にAppにApiKeyを設定
+https://qiita.com/yukihigasi/items/f93ac7aed7de7c56c16b
+
+
+
+
+
+
+VirtualizedList: You have a large list that is slow to update - make sure your renderItem function renders components that follow React performance best practices like PureComponent, shouldComponentUpdate, etc. {dt: 1994, prevDt: 8865, contentLength: 37172}
+
+
+
 
 
 ## build
@@ -58,14 +78,24 @@ https://firebase.google.com/docs/firestore/quickstart?authuser=0
 <dd>https://github.com/necolas/react-native-web/issues/1026</dd>
 <dt>Attempted import error: 'shouldUseActivityState' is not exported from 'react-native-screens'. </dt>
 <dd>https://github.com/react-navigation/react-navigation/issues/8993</dd>
+<dt>TouchableOpacityを使ってみる 【これからはじめるReact Native】</dt>
+<dd>https://bagelee.com/programming/react-native/touchableopacity-react-native/</dd>
 <dt>Platform Specific Code</dt>
 <dd>https://reactnative.dev/docs/platform-specific-code</dd>
 <dt>[React Native]FlatListを更新する方法</dt>
 <dd>https://qiita.com/b_a_a_d_o/items/59b0cda06e869f7ddcdf</dd>
 <dt>[React] useEffectで無限ループしてしまう</dt>
 <dd>https://qiita.com/QiitaD/items/d3e1e29dbcb4ee1ba6a8</dd>
-<dt></dt>
-<dd></dd>
+<dt>Using Firebase</dt>
+<dd>https://docs.expo.io/guides/using-firebase/</dd>
+<dt>AsyncStorageはもういらない！react-native-storageを使ってみた！</dt>
+<dd>https://qiita.com/kaba/items/e5eb1c6edd7843fc7553</dd>
+<dt>NativeScreenContainer seems blocking android context menu to show up</dt>
+<dd>https://github.com/software-mansion/react-native-screens/issues/205</dd>
+<dt>副作用フックの利用法</dt>
+<dd>https://ja.reactjs.org/docs/hooks-effect.html</dd>
+<dt>firebaseのチュートリアルで、Error: Missing or insufficient permissions.と言われた時の解決法メモ</dt>
+<dd>https://qiita.com/hibohiboo/items/7af59b6d0d9df98d96c4</dd>
 <dt></dt>
 <dd></dd>
 <dt></dt>
