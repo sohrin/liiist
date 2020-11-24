@@ -3,6 +3,17 @@ cd /Users/str2653z/Documents/_dev/react/liiist
 # liiist
 list knowledge management system(React Native, TypeScript)
 
+## TODO
+* タグ付け機能
+* オプション保存（正規系限定、乱あり）
+* メモ保存機能
+* DPのCSVインポートを正確に（HYPER、ANOTHERなど、それぞれの譜面タイプで1レコードにする）
+* 難易度の★背景
+* SPのCSVインポート、SPのCSVチェック、DPのCSVチェック（穴掘の難易度で判断すればいいか）
+* SPのCSVインポート済だと「SP、LP、RP、DBM、DBR、DBHR」、DPのCSVインポート済だと「DP、DPSR」がモード選択可能に。
+* フォルダ作成（ひとまずバージョンフォルダ、難易度フォルダ）→フォルダ表示切り替え機能
+* 簡易フィルタ作成
+
 ## memo (vscode)
 * markdown preview：ctrl + k ＞ v
 
@@ -100,18 +111,25 @@ VirtualizedList: You have a large list that is slow to update - make sure your r
 <dd>https://qiita.com/impl_s/items/82d386928f3ec2a3e61b</dd>
 <dt>Expo (React Native) のエントリポイントになるファイル App.js を変更する</dt>
 <dd>https://qiita.com/KamataRyo/items/4e8a4c31bd3e20f00cbe</dd>
+<dt>ReactNativeのFlatListの項目をクリックしてDetail画面へ移動する</dt>
+<dd>https://qiita.com/zaburo/items/dc8aa4983567e842d8c4</dd>
+<dt>React Nativeのデザイン - Stylesheet/Flexbox (part1)</dt>
+<dd>https://qiita.com/shohey1226/items/5185fcba7381bf4da2f2</dd>
+<dt>レイアウトを整える【これからはじめるReact Native】</dt>
+<dd>https://bagelee.com/programming/react-native/react-native-layout/</dd>
+<dt>How to have Ellipsis effect on Text</dt>
+<dd>https://stackoverflow.com/questions/30594080/how-to-have-ellipsis-effect-on-text</dd>
+<dt>box-shadow:react-nativeのインセット</dt>
+<dd>https://www.366service.com/jp/qa/78648c0f11b599d19a9b05cffc47789f</dd>
 <dt></dt>
 <dd></dd>
 <dt></dt>
 <dd></dd>
 <dt></dt>
 <dd></dd>
-<dt></dt>
-<dd></dd>
-<dt></dt>
-<dd></dd>
-<dt></dt>
-<dd></dd>
+
+<dt>React Native flexプロパティ、段組配置、固定要素配置方法</dt>
+<dd>https://qiita.com/YutamaKotaro/items/b6e37c0314a258debaf3</dd>
 <dt></dt>
 <dd></dd>
 <dt></dt>

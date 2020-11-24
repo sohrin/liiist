@@ -17,6 +17,7 @@ import { RootStackParamList } from "../src/types/RootStackParamList";
 import { MusicListScreen }    from "../src/screens/MusicListScreen";
 import { SettingsScreen }     from "../src/screens/SettingsScreen";
 import { ImportCsvScreen }    from "../src/screens/ImportCsvScreen";
+import { MusicDetailsScreen } from './screens/MusicDetailsScreen';
 
 const storage = new Storage({
   storageBackend: AsyncStorage
@@ -24,28 +25,23 @@ const storage = new Storage({
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
-{/*
-function MainScreen() {
+
+function MusicListStackScreen() {
   return (
-    <RootStack.Navigator initialRouteName="Home">
+    <RootStack.Navigator initialRouteName="MusicList">
       <RootStack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ title: 'Overview' }}
-        initialParams={{post: "initialPost"}}
+        name="MusicList"
+        component={MusicListScreen}
+        options={{ title: 'KAiiiDEN' }}
+        initialParams={{musicDataList: []}}
       />
       <RootStack.Screen
-        name="Details"
-        component={DetailsScreen}
-      />
-      <RootStack.Screen
-        name="CreatePost"
-        component={CreatePostScreen}
+        name="MusicDetails"
+        component={MusicDetailsScreen}
       />
     </RootStack.Navigator>
   );
 }
-*/}
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -55,7 +51,7 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator>
         {/* <Tab.Screen name="Main" component={MainScreen} /> */}
-        <Tab.Screen name="MusicList" component={MusicListScreen} initialParams={{musicDataList: []}} />
+        <Tab.Screen name="MusicList" component={MusicListStackScreen} />
         <Tab.Screen name="ImportCsv" component={ImportCsvScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>

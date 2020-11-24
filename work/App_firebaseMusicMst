@@ -38,7 +38,7 @@ type MusicData = {
   key: string,  // title + difficultType
   title: string,
   difficultType: string,
-  difficulity: number,
+  difficulty: number,
 };
 
 type RootStackParamList = {
@@ -274,7 +274,7 @@ function ImportCsvScreen({navigation}: ImportCsvProps) {
           key: csvArr[1] + keycount,
           title: csvArr[1],
           difficultType: "ANOTHER",
-          difficulity: 12,
+          difficulty: 12,
         });
 
 

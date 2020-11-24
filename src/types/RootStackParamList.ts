@@ -12,5 +12,8 @@ export type RootStackParamList = {
     MusicList: {
         musicDataList: MusicData[]
     },
+    MusicDetails: {
+        musicData: MusicData
+    },
     ImportCsv: undefined,
 };

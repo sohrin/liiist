@@ -49,7 +49,7 @@ export function ImportCsvScreen({navigation}: ImportCsvProps) {
           key: csvArr[1] + "ANOTHER",
           title: csvArr[1],
           difficultType: "ANOTHER",
-          difficulity: 12,
+          difficulty: 12,
         });
       }
     }
