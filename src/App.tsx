@@ -25,6 +25,11 @@ const storage = new Storage({
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
+// MEMO: ストレージの「リセット用
+// storage.save({
+//   key: 'musicListItemDataList',
+//   data: null
+// })
 
 function MusicListStackScreen() {
   return (
@@ -33,7 +38,7 @@ function MusicListStackScreen() {
         name="MusicList"
         component={MusicListScreen}
         options={{ title: 'KAiiiDEN' }}
-        initialParams={{musicDataList: []}}
+        initialParams={{musicListItemDataList: []}}
       />
       <RootStack.Screen
         name="MusicDetails"
@@ -49,7 +54,12 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator
+        // MEMO: MusicDetails→ImportCsvと遷移した後、MusicList（Tabのルート）に戻るための設定。これがないとMusicDetailsに戻ってしまう。
+        screenOptions={{
+          unmountOnBlur: true,
+        }}
+      >
         {/* <Tab.Screen name="Main" component={MainScreen} /> */}
         <Tab.Screen name="MusicList" component={MusicListStackScreen} />
         <Tab.Screen name="ImportCsv" component={ImportCsvScreen} />

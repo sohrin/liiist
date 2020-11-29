@@ -2,7 +2,7 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, TextInput, Clipboard } from 'react-native';
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, StackActions, CommonActions } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Screen, screensEnabled } from 'react-native-screens';
@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import { RootStackParamList } from "../../src/types/RootStackParamList";
 import { MusicData }          from "../../src/types/MusicData";
+import { MusicListItemData } from '../types/MusicListItemData';
 
 const storage = new Storage({
 storageBackend: AsyncStorage
@@ -54,12 +55,31 @@ export function ImportCsvScreen({navigation}: ImportCsvProps) {
       }
     }
 
-    storage.save({
-      key: 'musicDataList',
-      data: parsedMusicDataList
-    })
+    let musicListItemDataList: MusicListItemData[] = [];
+    for (let parsedMusicData of parsedMusicDataList) {
+      let latestMusicListItemData: MusicListItemData = {
+        key: parsedMusicData.key,
+        musicData: parsedMusicData,
+        musicResultData: {
+          key: parsedMusicData.key,
+          title: parsedMusicData.title,
+          difficultType: parsedMusicData.difficultType,
+          memo: "",
+          tags: [],
+        }
+      };
+      musicListItemDataList.push(latestMusicListItemData);
+    }
 
-    navigation.navigate('MusicList', { musicDataList: parsedMusicDataList });
+    storage.save({
+      key: 'musicListItemDataList',
+      data: musicListItemDataList
+    });
+
+    // TODO: 後で消す
+    alert(JSON.stringify(musicListItemDataList));
+
+    navigation.navigate('MusicList', { musicListItemDataList: musicListItemDataList });
   };
 
   return (

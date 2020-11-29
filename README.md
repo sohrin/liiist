@@ -21,9 +21,10 @@ list knowledge management system(React Native, TypeScript)
 * 【install npm, yarn, React Developer Tools】
 1. npm install --global expo-cli
 2. npm install --global yarn
-3. git clone https://github.com/sohrin/liiist.git
-4. cd liiist
-5. yarn
+3. Firebase CLIのインストール：https://firebase.google.com/docs/cli?hl=ja
+4. git clone https://github.com/sohrin/liiist.git
+5. cd liiist
+6. yarn
 * yarn run web
 * 【read expo qr at ios or android】 
 
@@ -37,7 +38,8 @@ list knowledge management system(React Native, TypeScript)
 * yarn add @react-native-community/async-storage
 * expo install @react-native-community/async-storage
 * expo install firebase
-
+* yarn add lodash
+* yarn add @types/lodash
 
 
 ## setup Firebase
@@ -49,6 +51,14 @@ Webアプリにfirebaseを追加（Firebase Hostingは後）※firebaseConfigを
 https://reffect.co.jp/html/firebase-cloud-firestore
 以下を参考にAppにApiKeyを設定
 https://qiita.com/yukihigasi/items/f93ac7aed7de7c56c16b
+
+## Firebase CLI Setting
+* firebase login
+* firebase projects:list　※エラーが出る場合は「firebase login --reauth --no-localhost」でログインし直してから。
+
+## delete Firestore collection
+firebase firestore:delete musicMst -r --project kaiiiden
+
 
 
 
@@ -121,15 +131,48 @@ VirtualizedList: You have a large list that is slow to update - make sure your r
 <dd>https://stackoverflow.com/questions/30594080/how-to-have-ellipsis-effect-on-text</dd>
 <dt>box-shadow:react-nativeのインセット</dt>
 <dd>https://www.366service.com/jp/qa/78648c0f11b599d19a9b05cffc47789f</dd>
-<dt></dt>
-<dd></dd>
-<dt></dt>
-<dd></dd>
-<dt></dt>
-<dd></dd>
-
 <dt>React Native flexプロパティ、段組配置、固定要素配置方法</dt>
 <dd>https://qiita.com/YutamaKotaro/items/b6e37c0314a258debaf3</dd>
+<dt></dt>
+<dd></dd>
+<dt></dt>
+<dd></dd>
+<dt></dt>
+<dd></dd>
+<dt>オブジェクトの比較に JSON.stringify() を使ってはいけない —— プロパティには順序が無い</dt>
+<dd>https://qiita.com/8x9/items/218e24b7e6eea2446beb</dd>
+<dt>【JavaScript】lodashの使い方</dt>
+<dd>https://qiita.com/sitilma/items/a08e28def541c28458a0</dd>
+<dt>useEffectフックのしくみ</dt>
+<dd>https://qiita.com/ossan-engineer/items/740425a0df937a47e093</dd>
+
+
+
+<dt></dt>
+<dd></dd>
+<dt></dt>
+<dd></dd>
+<dt>TextInputとイベント 【これからはじめるReact Native】</dt>
+<dd>https://bagelee.com/programming/react-native/textinput-react-native/</dd>
+
+<dt>Cloud Firestore にデータを追加する</dt>
+<dd>https://firebase.google.com/docs/firestore/manage-data/add-data?hl=ja</dd>
+<dt>Firestoreでコレクションを削除する</dt>
+<dd>https://qiita.com/zaburo/items/b91e1cf240aa6f079470</dd>
+<dt>firebase initしたらError: HTTP Error: 401が出た</dt>
+<dd>https://haayaaa.hatenablog.com/entry/2019/05/04/180633</dd>
+<dt>JavaScriptのオブジェクトのキーに変数の値を使うTips</dt>
+<dd>https://qiita.com/masarufuruya/items/d29a567d0ca4bbfb00cb</dd>
+<dt>react-navigation v4で追加された新たなhooks</dt>
+<dd>https://qiita.com/Naturalclar/items/9050cdc2812f06b6b0d0</dd>
+<dt>Resetting React Stack Navigator from Another Stack</dt>
+<dd>https://stackoverflow.com/questions/60481685/resetting-react-stack-navigator-from-another-stack</dd>
+<dt></dt>
+<dd></dd>
+<dt></dt>
+<dd></dd>
+<dt></dt>
+<dd></dd>
 <dt></dt>
 <dd></dd>
 <dt></dt>

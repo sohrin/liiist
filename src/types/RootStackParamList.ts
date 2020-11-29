@@ -1,4 +1,4 @@
-import { MusicData } from "../../src/types/MusicData";
+import { MusicListItemData } from "../../src/types/MusicListItemData";
 
 export type RootStackParamList = {
     Home: {
@@ -10,10 +10,10 @@ export type RootStackParamList = {
     },
     CreatePost: undefined
     MusicList: {
-        musicDataList: MusicData[]
+        musicListItemDataList: MusicListItemData[]
     },
     MusicDetails: {
-        musicData: MusicData
+        musicListItemData: MusicListItemData
     },
     ImportCsv: undefined,
 };

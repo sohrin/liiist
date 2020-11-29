@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Platform, StyleSheet, Text, View, FlatList, TouchableOpacity, ImageBackground, Alert, Clipboard, Dimensions } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from "../types/RootStackParamList";
 import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-community/async-storage';
 import { MusicData } from '../types/MusicData';
+import { MusicListItemData } from '../types/MusicListItemData';
+import { MusicResultData } from '../types/MusicResultData';
 
 const storage = new Storage({
   storageBackend: AsyncStorage
@@ -30,20 +32,35 @@ export function MusicListScreen({ route, navigation }: MusicListProps) {
   const param = route.params;
   const [refreshFlatList, setRefreshFlatList] = React.useState(true);
 
+  useFocusEffect(
+    useCallback(() => {
+      // MEMO: 別ScreenからMusicListScreenに遷移するときはここに処理を書く。初回表示時にも動くことに注意。
+      alert(JSON.stringify(route.params.musicListItemDataList))
+      setRefreshFlatList(!refreshFlatList);
+      // return () => {
+      //   // MEMO: MusicListScreenから別Screenに遷移するときはここに処理を書く。
+      //   alert("別画面へ");
+      // }
+    }, [])
+  );
+
   useEffect(() => {
-    storage.load({ key: 'musicDataList' })
-      .then(storageMusicDataList => {
-        param.musicDataList.splice(0);
-        param.musicDataList.splice(param.musicDataList.length, 0, ...storageMusicDataList);
+    storage.load({ key: 'musicListItemDataList' })
+      .then(storageMusicListItemDataList => {
+        // TODO: リザルトは毎起動時にFirestoreに取りに行く前提で作成し、まともに使える性能になるか試す。
+        let latestMusicResultDataList: MusicResultData[] = [];
+
+        param.musicListItemDataList.splice(0);
+        param.musicListItemDataList.splice(0, storageMusicListItemDataList.length - 1, ...storageMusicListItemDataList);
         setRefreshFlatList(!refreshFlatList);
       })
       .catch(err => {
         // TODO: 例外処理
       });
-  }, []); // MEMO: 第2引数に
+  }, []); // MEMO: 第2引数に空リストを与えると1回だけ動く
 
   const navigateToDetails = (item: any) => {
-    navigation.navigate("MusicDetails", {musicData: item});
+    navigation.navigate("MusicDetails", {musicListItemData: item});
   }
 
   // MEMO: 縦スクロールエリア対応
@@ -83,14 +100,14 @@ export function MusicListScreen({ route, navigation }: MusicListProps) {
             }}
           >
 */}
-            <Text style={styles.difficulty}>{item.difficulty}</Text>
+            <Text style={styles.difficulty}>{item.musicData.difficulty}</Text>
 {/*
           </ImageBackground>
 */}
         </View>
         <View style={styles.nameArea}>
           <View style={styles.titleArea}>
-            <Text style={styles.title} numberOfLines={1}>{item.title}</Text>
+            <Text style={styles.title} numberOfLines={1}>{item.musicData.title}</Text>
           </View>
           <Text style={styles.tags}>tags: #sampleTag1 #sampleTag2 #sampleTag3</Text>
           <Text style={styles.memo}>memo: memomemomemomemomemomemomemomemo</Text>
@@ -107,7 +124,7 @@ export function MusicListScreen({ route, navigation }: MusicListProps) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <FlatList
-        data={param.musicDataList}
+        data={param.musicListItemDataList}
         extraData={refreshFlatList}
         renderItem={renderItem}
         keyExtractor={item => item.key}
