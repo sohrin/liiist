@@ -40,6 +40,7 @@ list knowledge management system(React Native, TypeScript)
 * expo install firebase
 * yarn add lodash
 * yarn add @types/lodash
+* yarn add babel-plugin-dotenv-import
 
 
 ## setup Firebase
@@ -167,10 +168,10 @@ VirtualizedList: You have a large list that is slow to update - make sure your r
 <dd>https://qiita.com/Naturalclar/items/9050cdc2812f06b6b0d0</dd>
 <dt>Resetting React Stack Navigator from Another Stack</dt>
 <dd>https://stackoverflow.com/questions/60481685/resetting-react-stack-navigator-from-another-stack</dd>
-<dt></dt>
-<dd></dd>
-<dt></dt>
-<dd></dd>
+<dt>ExpoとReactNativeで環境変数を設定する</dt>
+<dd>https://qiita.com/risto24/items/19854d359ad500d9a2a3</dd>
+<dt>Error: Unable to resolve module `@env` from `src/utils.ts`: @env could not be found within the project.</dt>
+<dd>https://github.com/goatandsheep/react-native-dotenv/issues/52</dd>
 <dt></dt>
 <dd></dd>
 <dt></dt>
