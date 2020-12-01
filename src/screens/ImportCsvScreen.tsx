@@ -16,7 +16,8 @@ import { MusicData }          from "../../src/types/MusicData";
 import { MusicListItemData } from '../types/MusicListItemData';
 
 const storage = new Storage({
-storageBackend: AsyncStorage
+  storageBackend: AsyncStorage,
+  enableCache: false,
 })
 
 type ImportCsvScreenNavigationProp = StackNavigationProp<

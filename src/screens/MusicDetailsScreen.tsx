@@ -8,47 +8,9 @@ import { MusicData } from '../types/MusicData';
 import { MusicListItemData } from '../types/MusicListItemData';
 import _ from 'lodash';
 
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-import {
-  FIREBASE_CONFIG_API_KEY,
-  FIREBASE_CONFIG_AUTH_DOMAIN,
-  FIREBASE_CONFIG_DATABASE_URL,
-  FIREBASE_CONFIG_PROJECT_ID,
-  FIREBASE_CONFIG_STORAGE_BUCKET,
-  FIREBASE_CONFIG_MESSAGING_SENDER_ID,
-  FIREBASE_CONFIG_APP_ID,
-  FIREBASE_CONFIG_MEASUREMENT_ID,
-} from '@env';
-
-// Optionally import the services that you want to use
-//import "firebase/auth";
-//import "firebase/database";
-//import "firebase/firestore";
-//import "firebase/functions";
-//import "firebase/storage";
-
-// Initialize Firebase
-const firebaseConfig = {
-  apiKey: 
-    FIREBASE_CONFIG_API_KEY,
-  authDomain: 
-    FIREBASE_CONFIG_AUTH_DOMAIN,
-  databaseURL: 
-    FIREBASE_CONFIG_DATABASE_URL,
-  projectId: 
-    FIREBASE_CONFIG_PROJECT_ID,
-  storageBucket: 
-    FIREBASE_CONFIG_STORAGE_BUCKET,
-  messagingSenderId: 
-    FIREBASE_CONFIG_MESSAGING_SENDER_ID,
-  appId: 
-    FIREBASE_CONFIG_APP_ID,
-  measurementId: 
-  FIREBASE_CONFIG_MEASUREMENT_ID
-};
-firebase.initializeApp(firebaseConfig);
-const firestore = firebase.firestore();
+import { FirestoreUtil } from '../utils/FirestoreUtil';
+const firestoreUtil: FirestoreUtil = FirestoreUtil.getInstance();
+const firestore = firestoreUtil.firestore;
 
 type MusicDetailsScreenRouteProp = RouteProp<
   RootStackParamList,

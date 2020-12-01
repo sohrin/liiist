@@ -10,7 +10,9 @@ import { MusicListItemData } from '../types/MusicListItemData';
 import { MusicResultData } from '../types/MusicResultData';
 
 const storage = new Storage({
-  storageBackend: AsyncStorage
+  storageBackend: AsyncStorage,
+  // MEMO: キャッシュオフにしないと、ImportCsv後に一覧が最新化されないことに注意。
+  enableCache: false,
 })
 
 type MusicListScreenRouteProp = RouteProp<
@@ -34,9 +36,24 @@ export function MusicListScreen({ route, navigation }: MusicListProps) {
 
   useFocusEffect(
     useCallback(() => {
+      alert("useFocusEffect_useCallback");
       // MEMO: 別ScreenからMusicListScreenに遷移するときはここに処理を書く。初回表示時にも動くことに注意。
-      alert(JSON.stringify(route.params.musicListItemDataList))
-      setRefreshFlatList(!refreshFlatList);
+      storage.load({ key: 'musicListItemDataList' })
+        .then(storageMusicListItemDataList => {
+          // TODO: リザルトは毎起動時にFirestoreに取りに行く前提で作成し、まともに使える性能になるか試す。
+          let latestMusicResultDataList: MusicResultData[] = [];
+
+
+          alert(JSON.stringify(storageMusicListItemDataList))
+
+
+          param.musicListItemDataList.splice(0);
+          param.musicListItemDataList.splice(0, storageMusicListItemDataList.length - 1, ...storageMusicListItemDataList);
+          setRefreshFlatList(!refreshFlatList);
+        })
+        .catch(err => {
+          // TODO: 例外処理
+        });
       // return () => {
       //   // MEMO: MusicListScreenから別Screenに遷移するときはここに処理を書く。
       //   alert("別画面へ");
@@ -44,19 +61,14 @@ export function MusicListScreen({ route, navigation }: MusicListProps) {
     }, [])
   );
 
-  useEffect(() => {
-    storage.load({ key: 'musicListItemDataList' })
-      .then(storageMusicListItemDataList => {
-        // TODO: リザルトは毎起動時にFirestoreに取りに行く前提で作成し、まともに使える性能になるか試す。
-        let latestMusicResultDataList: MusicResultData[] = [];
 
-        param.musicListItemDataList.splice(0);
-        param.musicListItemDataList.splice(0, storageMusicListItemDataList.length - 1, ...storageMusicListItemDataList);
-        setRefreshFlatList(!refreshFlatList);
-      })
-      .catch(err => {
-        // TODO: 例外処理
-      });
+  // TODO: アプリ起動時と、ImportCsvからの遷移のときのみFirestoreを読み込み直す。Tab遷移では読み込み直したくない。
+
+
+
+  useEffect(() => {
+    // TODO: 一時的にストレージからの読み込みをuseFocusEffectに移動した。
+    // MEMO: useEffectより先に、useFocusEffectのuseCallbackが動作する。
   }, []); // MEMO: 第2引数に空リストを与えると1回だけ動く
 
   const navigateToDetails = (item: any) => {
@@ -109,8 +121,15 @@ export function MusicListScreen({ route, navigation }: MusicListProps) {
           <View style={styles.titleArea}>
             <Text style={styles.title} numberOfLines={1}>{item.musicData.title}</Text>
           </View>
-          <Text style={styles.tags}>tags: #sampleTag1 #sampleTag2 #sampleTag3</Text>
-          <Text style={styles.memo}>memo: memomemomemomemomemomemomemomemo</Text>
+          <Text style={styles.tags}>tags: {item.musicResultData.tags.map(
+            (tag: any) => {
+              return(
+                <Text>{tag}</Text>
+              )
+            }
+          )}
+          </Text>
+          <Text style={styles.memo}>memo: {item.musicResultData.memo}</Text>
         </View>
         <View style={styles.rankArea}>
           <Text>rank : AAA (MAX-100)</Text>{/*  style={styles.title} */}
